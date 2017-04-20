@@ -50,7 +50,7 @@ public class FragmentJoke extends Fragment {
         // 关联
         pagerBar.setViewPager(viewPager);
 
-        // PagerNavigationBar的属性不需要全部设置，根据自己的需要设置就行
+        //-------设置PagerNavigationBar的属性，按需设置就行------------//
         // 自动填充满屏幕(默认不填满)
         pagerBar.setShouldExpand(true);
         // 需要分割线(默认不需要)
@@ -66,7 +66,7 @@ public class FragmentJoke extends Fragment {
         // 设置游标高度 单位px，默认4dp
         pagerBar.setIndicatorHeight(10);
         // 设置游标滑动方式是否为默认的，默认为true
-        pagerBar.setIndicatorScrollModel(false);
+        pagerBar.setIndicatorScrollModel(true);
 
         return view;
     }

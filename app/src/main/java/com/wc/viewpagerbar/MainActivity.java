@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //-------设置selectView的属性，按需设置就行------------//
+        //-------设置SelectView的属性，按需设置就行------------//
         //设置字体大小,默认14sp
         selectView.setTextSize(14);
         //设置圆角大小，默认6

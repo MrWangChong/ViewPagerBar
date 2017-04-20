@@ -95,7 +95,7 @@ demo是在ViewPager里面加入Fragment使用的
             }
         });
 
-        //-------设置selectView的属性，按需设置就行------------//
+        //-------设置SelectView的属性，按需设置就行------------//
         //设置字体大小,默认14sp
         selectView.setTextSize(14);
         //设置圆角大小，默认6
@@ -188,7 +188,7 @@ viewPager.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments, t
 pagerBar.setViewPager(viewPager);
 
 
-// ------------下面的属性自己根据需要设置就行，不需要全部都设置
+//-------设置selectView的属性，按需设置就行------------//
  // 自动填充满屏幕(默认不填满)
 pagerBar.setShouldExpand(true);
 // 需要分割线(默认不需要)
