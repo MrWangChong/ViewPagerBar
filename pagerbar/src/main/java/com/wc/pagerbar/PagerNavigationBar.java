@@ -479,7 +479,13 @@ public class PagerNavigationBar extends HorizontalScrollView {
                         mLinePaint.setStrokeWidth(mDividerWidth);
                         if (i != titles.length - 1) {
                             float dividerHeight = mHeight * mDividerWeight;
-                            float dividerX = x + textWidth + spacing - mDividerWidth * 0.5f;
+                            float dividerX;
+                            if (noscreen) {
+                                float textFullWidth = mWidth / titles.length;
+                                dividerX = textFullWidth * (i + 1) - mDividerWidth * 0.5f;
+                            } else {
+                                dividerX = x + textWidth + spacing - mDividerWidth * 0.5f;
+                            }
                             canvas.drawLine(dividerX, (mHeight - dividerHeight) * 0.5f, dividerX, (mHeight + dividerHeight) * 0.5f, mLinePaint);
                         }
                     }
