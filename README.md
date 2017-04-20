@@ -24,6 +24,11 @@ Step 2. Add the dependency
 自己写的时候新加了一个滑动效果，计算方法参考了[SmartTabLayout](https://github.com/ogaclejapan/SmartTabLayout)
 
 总共就两个类，可以自行拷贝来使用，嫌麻烦就直接引入就行。
+
+#### 效果图
+![image](https://github.com/MrWangChong/ViewPagerBar/blob/master/app/image/image1.gif)
+![image](https://github.com/MrWangChong/ViewPagerBar/blob/master/app/image/image2.gif)
+
 * 仿QQ顶部导航栏  SelectView  
 有一个缺点，当时写的时候图快，没有写计算控件宽度和高度的方法，需要固定好宽高使用
 
