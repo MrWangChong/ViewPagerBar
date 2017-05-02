@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,7 +79,21 @@ public class PagerNavigationBar extends HorizontalScrollView {
 //        if (speMode == MeasureSpec.EXACTLY) {//MeasureSpec.EXACTLY是精确尺寸
 //            mHeight = speSize;
 //        }
-        mLayoutHeight = getMeasuredHeight();
+        int speSize = MeasureSpec.getSize(heightMeasureSpec);
+        int speMode = MeasureSpec.getMode(heightMeasureSpec);
+        int minHeight = getSuggestedMinimumHeight();
+        switch (speMode) {
+            case MeasureSpec.UNSPECIFIED:
+                mLayoutHeight = minHeight;
+                break;
+            case MeasureSpec.AT_MOST:
+                mLayoutHeight = Math.min(speSize, minHeight);
+                break;
+            case MeasureSpec.EXACTLY:
+            default:
+                mLayoutHeight = mLayoutHeight == 0 ? speSize : Math.min(mLayoutHeight, speSize);
+        }
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), mLayoutHeight);
     }
 
     /**
@@ -426,7 +439,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
             }
             mHeight = mLayoutHeight;
             if (isExpand) {
-                Log.v(TAG, "mWidth=" + mWidth + "\tscreenWidth=" + screenWidth);
+//                Log.v(TAG, "mWidth=" + mWidth + "\tmHeight" + mHeight + "\tscreenWidth=" + screenWidth);
                 if (mWidth < screenWidth) {
                     mWidth = screenWidth;
                     noscreen = true;
@@ -472,6 +485,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
                         }
                     }
                     canvas.drawText(s, x, y, mPaint);
+//                    Log.d(TAG, "drawText:" + s + "\tx=" + x + "\ty=" + y);
                     if (hasDivider && mDividerWidth != 0) {
                         if (mLinePaint.getColor() != mDividerColor) {
                             mLinePaint.setColor(mDividerColor);
@@ -491,7 +505,6 @@ public class PagerNavigationBar extends HorizontalScrollView {
                     }
                 }
             }
-
             //绘制Indicator
             if (mIndicatorHeight != 0 && titles != null && titles.length > 0) {
                 if (mLinePaint.getColor() != mIndicatorColor) {
