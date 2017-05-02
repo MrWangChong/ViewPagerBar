@@ -23,5 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.github.MrWangChong:ViewPagerBar:1.0.1'
+    compile 'com.github.MrWangChong:ViewPagerBar:1.0.3'
 }
