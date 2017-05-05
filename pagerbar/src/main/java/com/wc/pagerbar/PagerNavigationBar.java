@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -341,14 +340,14 @@ public class PagerNavigationBar extends HorizontalScrollView {
                 public boolean onDown(MotionEvent e) {
                     dwonX = e.getX();
                     action_dwon = true;
-                    Log.v("onTouchEvent", "onDown");
+//                    Log.v("onTouchEvent", "onDown");
                     return true;
                 }
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
                     onCkick(e.getX());
-                    Log.v("onTouchEvent", "onSingleTapUp");
+//                    Log.v("onTouchEvent", "onSingleTapUp");
                     return super.onSingleTapUp(e);
                 }
 

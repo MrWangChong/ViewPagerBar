@@ -11,7 +11,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -248,10 +247,10 @@ public class SelectView extends View {
             case MotionEvent.ACTION_DOWN:
                 action_dwon = true;
                 action_x = event.getRawX();
-                Log.v("onTouchEvent", "按下");
+//                Log.v("onTouchEvent", "按下");
                 return true;
             case MotionEvent.ACTION_UP:
-                Log.v("onTouchEvent", "松开");
+//                Log.v("onTouchEvent", "松开");
                 onCkick(event);
                 break;
             case MotionEvent.ACTION_CANCEL:
