@@ -9,7 +9,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -322,6 +324,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
         private boolean isDefault = true;
         private int mTouchSlop;
         private boolean noscreen;//是否不满全屏并且需要全屏铺展
+        private GestureDetector mGestureDetector;
 
         public PagerNavigationView(Context context) {
             super(context);
@@ -333,6 +336,29 @@ public class PagerNavigationBar extends HorizontalScrollView {
             mLinePaint = new Paint();
             mLinePaint.setAntiAlias(true);
             mLinePaint.setStyle(Paint.Style.FILL);
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    dwonX = e.getX();
+                    action_dwon = true;
+                    Log.v("onTouchEvent", "onDown");
+                    return true;
+                }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    onCkick(e.getX());
+                    Log.v("onTouchEvent", "onSingleTapUp");
+                    return super.onSingleTapUp(e);
+                }
+
+//                @Override
+//                public boolean onSingleTapConfirmed(MotionEvent e) {
+//                    onCkick(e.getX());
+//                    Log.v("onTouchEvent", "onSingleTapConfirmed");
+//                    return super.onSingleTapConfirmed(e);
+//                }
+            });
         }
 
         public void setIndicatorScrollModel(boolean isDefault) {
@@ -579,27 +605,29 @@ public class PagerNavigationBar extends HorizontalScrollView {
             return offset;
         }
 
+
         private boolean action_dwon;
         private float dwonX;
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    action_dwon = true;
-                    dwonX = event.getX();
-                    //Log.v("onTouchEvent", "按下");
-                    return true;
-                case MotionEvent.ACTION_UP:
-                    //Log.v("onTouchEvent", "松开");
-                    onCkick(event.getX());
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    onCkick(event.getX());
-                    break;
-
-            }
-            return super.onTouchEvent(event);
+            return mGestureDetector.onTouchEvent(event);
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    action_dwon = true;
+//                    dwonX = event.getX();
+//                    //Log.v("onTouchEvent", "按下");
+//                    return true;
+//                case MotionEvent.ACTION_UP:
+//                    //Log.v("onTouchEvent", "松开");
+//                    onCkick(event.getX());
+//                    break;
+//                case MotionEvent.ACTION_CANCEL:
+//                    onCkick(event.getX());
+//                    break;
+//
+//            }
+//            return super.onTouchEvent(event);
         }
 
         // 点击事件处理
