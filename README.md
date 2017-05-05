@@ -15,7 +15,7 @@ Step 1. Add the JitPack repository to your build file Add it in your root build.
 Step 2. Add the dependency
 ```gradle
 	dependencies {
-	       compile 'com.github.MrWangChong:ViewPagerBar:1.0.4'
+	       compile 'com.github.MrWangChong:ViewPagerBar:1.0.5'
 	}
 ```
 
