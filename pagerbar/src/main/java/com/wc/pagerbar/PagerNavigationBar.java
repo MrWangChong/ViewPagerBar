@@ -1,15 +1,14 @@
 package com.wc.pagerbar;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -145,11 +144,27 @@ public class PagerNavigationBar extends HorizontalScrollView {
     }
 
     /**
+     * 设置跟滑线宽度(默认和字体一样宽)
+     */
+    public void setIndicatorWidth(int widget) {
+        if (mView != null)
+            mView.setIndicatorWidth(widget);
+    }
+
+    /**
      * 设置滑动方式，是否为默认方式
      */
     public void setIndicatorScrollModel(boolean isDefault) {
         if (mView != null)
             mView.setIndicatorScrollModel(isDefault);
+    }
+
+    /**
+     * 设置显示方式，是否为默认方式
+     */
+    public void setIndicatorShowModel(boolean isDefault) {
+        if (mView != null)
+            mView.mIndicatorShowModelDefault = isDefault;
     }
 
     /**
@@ -232,7 +247,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
      */
     public void setCurrentItem(int item) {
         if (this.mViewPager != null) {
-            if (Math.abs(mCurItem - item) > 2) {
+            if (Math.abs(mCurItem - item) > 1) {
                 this.mViewPager.setCurrentItem(item, false);
             } else {
                 this.mViewPager.setCurrentItem(item);
@@ -303,13 +318,16 @@ public class PagerNavigationBar extends HorizontalScrollView {
         private float mHeight;
         private String[] titles;
         private int spacing = dip2px(16);
-        private float mTextSize = sp2px(15);
+        private float mTextSize = dip2px(15);
 
         private int mTextColor = Color.BLACK;
         private int mSetSelectedTextColor = Color.RED;
 
         private int mIndicatorColor = Color.RED;
         private int mIndicatorHeight = dip2px(4);
+        private float mIndicatorWidth;
+        private boolean mIsFixedIndicatorWidth;
+        private boolean mIndicatorShowModelDefault = true;//默然游标显示模式
         private int mLineColor = Color.parseColor("#DDDDDD");
         private int mLineHeight = 1;
 
@@ -324,6 +342,8 @@ public class PagerNavigationBar extends HorizontalScrollView {
         private int mTouchSlop;
         private boolean noscreen;//是否不满全屏并且需要全屏铺展
         private GestureDetector mGestureDetector;
+        private RectF mIndicatorRectF;
+        private boolean isStartToLeft = false;//从最左边开始
 
         public PagerNavigationView(Context context) {
             super(context);
@@ -364,12 +384,16 @@ public class PagerNavigationBar extends HorizontalScrollView {
             this.isDefault = isDefault;
         }
 
+        public void setIndicatorShowModel(boolean isDefault) {
+            this.mIndicatorShowModelDefault = isDefault;
+        }
+
         public void setSpacing(int spacing) {
             this.spacing = dip2px(spacing);
         }
 
         public void setTextSize(int size) {
-            mTextSize = sp2px(size);
+            mTextSize = dip2px(size);
         }
 
         public void setTextColor(int color) {
@@ -386,6 +410,11 @@ public class PagerNavigationBar extends HorizontalScrollView {
 
         public void setIndicatorHeight(int height) {
             mIndicatorHeight = height;
+        }
+
+        public void setIndicatorWidth(int width) {
+            mIndicatorWidth = width;
+            mIsFixedIndicatorWidth = true;
         }
 
         public void setLineColor(int color) {
@@ -478,7 +507,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            float startX = spacing;
+            float startX = isStartToLeft ? 0 : spacing;
             //绘制Text以及分割线
             if (titles != null && titles.length > 0) {
                 for (int i = 0; i < titles.length; i++) {
@@ -535,40 +564,60 @@ public class PagerNavigationBar extends HorizontalScrollView {
                 if (mLinePaint.getColor() != mIndicatorColor) {
                     mLinePaint.setColor(mIndicatorColor);
                 }
-                mLinePaint.setStrokeWidth(mIndicatorHeight);
-                startX = spacing;
+                if (mIndicatorShowModelDefault) {
+                    mLinePaint.setStrokeWidth(mIndicatorHeight);
+                }
+                float textWidth = mPaint.measureText(titles[scrolledPosition]);//当前textWidth宽度
+                if (!mIsFixedIndicatorWidth) {
+                    mIndicatorWidth = textWidth;//没有设置固定宽度则为选中文字宽度
+                }
+                startX = (textWidth - mIndicatorWidth) * 0.5f + (isStartToLeft ? 0 : spacing);
                 for (int i = 0; i < titles.length; i++) {
                     if (i == scrolledPosition) {
                         break;
                     } else {
-                        float textWidth = mPaint.measureText(titles[i]);
-                        startX = startX + textWidth + spacing * 2;
+                        float titleWidth = mPaint.measureText(titles[i]);
+                        startX = startX + titleWidth + spacing * 2;
                     }
                 }
-                float textWidth = mPaint.measureText(titles[scrolledPosition]);//当前textWidth宽度
+
                 if (noscreen) {
                     float textFullWidth = mWidth / titles.length;
-                    startX = textFullWidth * (scrolledPosition + 1) - (textFullWidth + textWidth) * 0.5f;
+                    startX = textFullWidth * (scrolledPosition + 1) - (textFullWidth + mIndicatorWidth) * 0.5f;
                 }
-                float stopX = startX + textWidth;
+                float stopX = startX + mIndicatorWidth;
 //                Log.v(TAG, "scrolledPosition=" + scrolledPosition);
                 if (positionOffset > 0f && scrolledPosition < mCount - 1) {
                     float nextTextWidth = mPaint.measureText(titles[scrolledPosition + 1]);
+                    float lastX = (textWidth - mIndicatorWidth) * 0.5f;
+                    if (!mIsFixedIndicatorWidth) {
+                        mIndicatorWidth = nextTextWidth;
+                    }
                     float nextTextRight;
                     if (noscreen) {
                         float textFullWidth = mWidth / titles.length;
-                        nextTextRight = textFullWidth * (scrolledPosition + 2) - (textFullWidth - nextTextWidth) * 0.5f;
+                        nextTextRight = textFullWidth * (scrolledPosition + 2) - (textFullWidth - mIndicatorWidth) * 0.5f;
                     } else {
-                        nextTextRight = stopX + spacing * 2 + nextTextWidth;
+                        nextTextRight = stopX + spacing * 2 + lastX + (nextTextWidth - mIndicatorWidth) * 0.5f + mIndicatorWidth;
                     }
-                    final float nextTextLeft = nextTextRight - nextTextWidth;
+                    float nextTextLeft = nextTextRight - mIndicatorWidth;
 
                     float startOffset = getStartOffset(positionOffset);
                     float endOffset = getStopOffset(positionOffset);
                     startX = (int) (startOffset * nextTextLeft + (1.0f - startOffset) * startX);
                     stopX = (int) (endOffset * nextTextRight + (1.0f - endOffset) * stopX);
                 }
-                canvas.drawLine(startX, mHeight, stopX, mHeight, mLinePaint);
+                if (mIndicatorShowModelDefault) {
+                    canvas.drawLine(startX, mHeight, stopX, mHeight, mLinePaint);
+                } else {
+                    if (mIndicatorRectF == null) {
+                        mIndicatorRectF = new RectF();
+                    }
+                    mIndicatorRectF.set(startX, mHeight - mIndicatorHeight, stopX, mHeight);
+                    canvas.drawRoundRect(
+                            mIndicatorRectF, mHeight * 0.5f,
+                            mHeight * 0.5f, mLinePaint);
+                }
             }
 
             //绘制最下面的细线
@@ -644,7 +693,7 @@ public class PagerNavigationBar extends HorizontalScrollView {
                             if (upX > startX && upX < startX + textWidth + spacing * 2) {
                                 if (i != mCurItem) {
                                     if (mOnClickListener == null) {
-                                        if (Math.abs(mCurItem - i) > 2) {
+                                        if (Math.abs(mCurItem - i) > 1) {
                                             mViewPager.setCurrentItem(i, false);
                                         } else {
                                             mViewPager.setCurrentItem(i);
@@ -675,16 +724,5 @@ public class PagerNavigationBar extends HorizontalScrollView {
     public int dip2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
-    }
-
-    public float sp2px(float size) {
-        Context c = getContext();
-        Resources r;
-        if (c == null)
-            r = Resources.getSystem();
-        else
-            r = c.getResources();
-
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, size, r.getDisplayMetrics());
     }
 }
