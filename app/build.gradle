@@ -22,5 +22,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.github.MrWangChong:ViewPagerBar:1.0.5'
+    implementation 'com.github.MrWangChong:ViewPagerBar:1.0.8'
 }
