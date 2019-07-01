@@ -3,11 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ViewPagerBar.iml" filepath="$PROJECT_DIR$/ViewPagerBar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ViewPagerBar.iml" filepath="$PROJECT_DIR$/ViewPagerBar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/ViewPagerBar.iml" filepath="$PROJECT_DIR$/.idea/ViewPagerBar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pagerbar/pagerbar.iml" filepath="$PROJECT_DIR$/pagerbar/pagerbar.iml" />
       <module fileurl="file://$PROJECT_DIR$/pagerbar/pagerbar.iml" filepath="$PROJECT_DIR$/pagerbar/pagerbar.iml" />
     </modules>
   </component>

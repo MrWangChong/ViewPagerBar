@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         selectView = (SelectView) findViewById(R.id.selectView);
-
         //设置ViewPager要加入的Fragment
         fragments = new ArrayList<>();
         fragments.add(new FragmentNews());//添加新闻页
